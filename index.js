@@ -7,24 +7,32 @@
 // startknopof js/html
 // neustart knopf js/html
 const spielfeld = document.querySelector(".spielfeld");
-spielfeld.classList.add("debug");
 const karten = [
-  { name: "Apfel", img: "" },
-  { name: "Banane", img: "" },
-  { name: "Birne", img: "" },
-  { name: "Orange", img: "" },
-  { name: "Pfirsich", img: "" },
-  { name: "Mango", img: "" },
-  { name: "Mandarine", img: "" },
-  { name: "Erdbeere", img: "" },
-  { name: "Apfel", img: "" },
-  { name: "Banane", img: "" },
-  { name: "Birne", img: "" },
-  { name: "Orange", img: "" },
-  { name: "Pfirsich", img: "" },
-  { name: "Mango", img: "" },
-  { name: "Mandarine", img: "" },
-  { name: "Erdbeere", img: "" },
+  { name: "Mango", img: "pub/pic0.jpg" },
+  { name: "Mandarine", img: "pub/pic1.jpg" },
+  { name: "Erdbeere", img: "pub/pic2.jpg" },
+  { name: "Apfel", img: "pub/pic3.jpg" },
+  { name: "Banane", img: "pub/pic4.jpg" },
+  { name: "Birne", img: "pub/pic5.jpg" },
+  { name: "Orange", img: "pub/pic6.jpg" },
+  { name: "Pfirsich", img: "pub/pic7.jpg" },
+  { name: "Mango", img: "pub/pic0.jpg" },
+  { name: "Mandarine", img: "pub/pic1.jpg" },
+  { name: "Erdbeere", img: "pub/pic2.jpg" },
+  { name: "Apfel", img: "pub/pic3.jpg" },
+  { name: "Banane", img: "pub/pic4.jpg" },
+  { name: "Birne", img: "pub/pic5.jpg" },
+  { name: "Orange", img: "pub/pic6.jpg" },
+  { name: "Pfirsich", img: "pub/pic7.jpg" },
+
+  //   { name: "Mango", img: "pub/pic8.jpg" },
+  //   { name: "Mandarine", img: "pub/pic9.jpg" },
+  //   { name: "Erdbeere", img: "pub/pic10.jpg" },
+  //   { name: "Erdbeere", img: "pub/pic11.jpg" },
+  //   { name: "Erdbeere", img: "pub/pic12.jpg" },
+  //   { name: "Erdbeere", img: "pub/pic13.jpg" },
+  //   { name: "Erdbeere", img: "pub/pic14.jpg" },
+  //   { name: "Erdbeere", img: "pub/pic15.jpg" },
 ];
 
 function mischen(array) {
@@ -43,22 +51,61 @@ function mischen(array) {
 
 const gemischteKarten = mischen(karten);
 
-let ersteKarte = true;
+let erstesBild = null;
+let zweitesBild = null;
+let ersteKarte = null;
+let zweiteKarte = null;
+let delay = false;
 
 for (const karte of gemischteKarten) {
+  const bild = document.createElement("img");
+  bild.src = karte.img;
+  bild.alt = "Example image";
+  bild.classList.add("verdeckt");
   const cardDiv = document.createElement("div");
   cardDiv.classList.add("karte");
-  cardDiv.classList.add("debug");
-  cardDiv.bild = karte.name;
-  cardDiv.style.backgroundImage = "url('images/himmel_90x90.jpg')";
+  // cardDiv.style.backgroundImage = "url('images/himmel_90x90.jpg')";
+  cardDiv.appendChild(bild);
   spielfeld.appendChild(cardDiv);
 
   cardDiv.addEventListener("click", (e) => {
-    if (ersteKarte) {
-      // umdrehen
+    if (delay) return;
+    if (cardDiv.classList.contains("paar")) return;
+    // if (bild.classList.contains("paar")) {
+    //   return;
+    // }
+    if (!erstesBild) {
+      bild.classList.remove("verdeckt");
+      erstesBild = bild;
+      ersteKarte = cardDiv;
     } else {
-      // umdrehen und auswerten
+      if (cardDiv === ersteKarte) return;
+
+      zweitesBild = bild;
+      zweiteKarte = cardDiv;
+      bild.classList.remove("verdeckt");
+      delay = true;
+      setTimeout(() => {
+        if (erstesBild.src === zweitesBild.src && erstesBild !== zweitesBild) {
+          erstesBild = null;
+          zweitesBild = null;
+          delay = false;
+          ersteKarte.classList.add("paar");
+          zweiteKarte.classList.add("paar");
+          ersteKarte = null;
+          zweiteKarte = null;
+        } else {
+          bild.classList.add("verdeckt");
+          erstesBild.classList.add("verdeckt");
+          erstesBild = null;
+          zweitesBild = null;
+          ersteKarte = null;
+          zweiteKarte = null;
+          delay = false;
+        }
+      }, 1500);
     }
+    console.log(erstesBild);
   });
 }
 

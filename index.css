@@ -17,11 +17,14 @@ body {
   main {
     section {
       margin: auto;
-      width: 20rem;
+      width: 100%;
       justify-content: center;
       display: flex;
       flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
       gap: 1rem;
+      max-width: 450px;
 
       .karte {
         height: 6rem;
@@ -29,9 +32,161 @@ body {
         display: hidden;
       }
 
-      .aufgedeckt {
-        display: block;
+      img {
+        height: 6rem;
+        width: 4rem;
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 0.5s ease;
+      }
+      .verdeckt {
+        /* opacity: 0; */
+        /* visibility: hidden; */
+        transition: opacity 0.5s ease;
+      }
+      .paar {
+        opacity: 75%;
+        pointer-events: none;
+      }
+      .karte {
+        width: 90px;
+        height: 120px;
+        position: relative;
+        perspective: 800px;
+        cursor: pointer;
+      }
+
+      .karte::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: url("images/himmel_90x90.jpg");
+        background-size: cover;
+        background-position: center;
+        border-radius: 8px;
+        transition: transform 0.5s;
+        transform-style: preserve-3d;
+      }
+
+      .karte img {
+        width: 100%;
+        height: 100%;
+        border-radius: 8px;
+        position: absolute;
+        inset: 0;
+        backface-visibility: hidden;
+        transform: rotateY(180deg);
+        transition: transform 0.5s;
+      }
+
+      .karte img:not(.verdeckt) {
+        transform: rotateY(0deg);
+      }
+
+      .karte img.verdeckt {
+        transform: rotateY(180deg);
       }
     }
   }
 }
+
+/* Allgemein
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #8bd3ff, #d6f6ff);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+/* Header */
+/* header {
+  width: 100%;
+  text-align: center;
+}
+
+header button {
+  padding: 0.8rem 2rem;
+  background: #0077c2;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+header button:hover {
+  background: #005f99;
+}
+
+/* Spielfeld */
+/* main {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.spielfeld {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 1rem;
+  max-width: 450px;
+}
+
+/* Karte */
+/* .karte {
+  width: 90px;
+  height: 120px;
+  position: relative;
+  perspective: 800px;
+  cursor: pointer;
+} */
+
+/* Kartenrückseite */
+/* .karte::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("images/himmel_90x90.jpg");
+  background-size: cover;
+  background-position: center;
+  border-radius: 8px;
+  transition: transform 0.5s;
+  transform-style: preserve-3d;
+} */
+
+/* Bild in Karte */
+/* .karte img {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  transform: rotateY(180deg);
+  transition: transform 0.5s;
+} */
+
+/* Aufgedeckt → Bild sichtbar */
+/* .karte img:not(.verdeckt) {
+  transform: rotateY(0deg);
+} */
+
+/* Verdeckt → Rückseite sichtbar */
+/* .karte img.verdeckt {
+  transform: rotateY(180deg);
+/* } */
