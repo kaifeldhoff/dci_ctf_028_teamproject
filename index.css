@@ -10,4 +10,28 @@
 }
 
 body {
+  .debug {
+    border: 3px solid red;
+  }
+
+  main {
+    section {
+      margin: auto;
+      width: 20rem;
+      justify-content: center;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+
+      .karte {
+        height: 6rem;
+        width: 4rem;
+        display: hidden;
+      }
+
+      .aufgedeckt {
+        display: block;
+      }
+    }
+  }
 }
