@@ -1,18 +1,18 @@
 /////////////////////////////// 1. Einstellungen ///////////////////////////////
 const PICFOLDER = "./pub/"; // Ordner mit Bildern
-const PICTYPE = ".jpg";      // Bildformat
-const ROWS = 4;              // Zeilen im Spielfeld
-const COLS = 4;              // Spalten im Spielfeld
+const PICTYPE = ".jpg"; // Bildformat
+const ROWS = 4; // Zeilen im Spielfeld
+const COLS = 4; // Spalten im Spielfeld
 
 const spielfeld = document.querySelector(".spielfeld"); // Container im HTML
 
 /////////////////////////////// 2. Kartengenerator ////////////////////////////
 function erstelleKarten() {
-  const anzahlKarten = ROWS * COLS / 2; // Anzahl verschiedener Bilder
+  const anzahlKarten = (ROWS * COLS) / 2; // Anzahl verschiedener Bilder
   const karten = [];
 
   for (let i = 0; i < anzahlKarten; i++) {
-    const bildPfad = `${PICFOLDER}pic${i}${PICTYPE}`;
+    const bildPfad = `${PICFOLDER}${i}${PICTYPE}`;
     // jedes Bild kommt zweimal ins Array für Paare
     karten.push({ name: `pic${i}`, img: bildPfad });
     karten.push({ name: `pic${i}`, img: bildPfad });
@@ -37,8 +37,14 @@ function erstelleSpielfeld(karten) {
     cardDiv.appendChild(bild);
 
     // Hover-Effekt
-    cardDiv.addEventListener("mouseenter", () => cardDiv.style.transform = "scale(1.1)");
-    cardDiv.addEventListener("mouseleave", () => cardDiv.style.transform = "scale(1)");
+    cardDiv.addEventListener(
+      "mouseenter",
+      () => (cardDiv.style.transform = "scale(1.1)")
+    );
+    cardDiv.addEventListener(
+      "mouseleave",
+      () => (cardDiv.style.transform = "scale(1)")
+    );
 
     spielfeld.appendChild(cardDiv);
   });
