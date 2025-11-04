@@ -1,22 +1,31 @@
-////////////////////////////// (vorerst) Globale Variablen ///////////////////////////////////
+////////////////////////////// Globale Variablen  für einfacheres Editing ///////////////////////////////////
 const PICFOLDER = "./pub/";
 const PICTYPE = ".jpg";
+const MAXPICS = 41; // max. Die Anzahl aller Bilder im Bilderordner mit {zahl}{picType} - Schema
+const COLS = 5; // Feldgeometrie
+const ROWS = 4; // dito
+const PIC_HEIGH = "200px"; /* noch nicht implementiert, 
+sollte dynamisch aus der Geometrie ermittelt werden, auch Abstände, etc */
+const PIC_WITH = PIC_HEIGH; // ebenso
 
-const MAXPICS = 16; // Max. Anzahl der Bilder im Bilderordner mit {zahl}{picType} - Schema
-const COLS = 4;
-const ROWS = 4;
-const picHeight = "200px";
-const picWith = picHeight;
+///////////////////////////////// Datenstruktur für Container /////////////////////////////
 
-/////////////////////////////////
+class CardSet {
+  picFolder;
+  picType;
+  maxPics;
+  backSidePic;
+  cols;
+  rows;
 
-const Galerie = {
-  picFolder: PICFOLDER,
-  picType: PICTYPE,
-  maxPics: MAXPICS,
-  backSidePic: this.picFolder + "backside" + this.picType,
-  cols: COLS,
-  rows: ROWS,
+  constructor() {
+    this.picFolder = PICFOLDER;
+    this.picType = PICTYPE;
+    this.maxPics = MAXPICS;
+    this.cols = COLS;
+    this.rows = ROWS;
+    this.backSidePic = this.picFolder + "backside" + this.picType;
+  }
 
   // Wählt aus dem Pool zufällig Bilder aus
   randomArray() {
@@ -29,7 +38,7 @@ const Galerie = {
         arr.push(r);
       }
     }
-    // ...und mischt das Ergebnis
+    // ...und mischt die Fundstücke
     const max = arrlang * 100;
     for (let i = 0; i <= max; i++) {
       const r = Math.floor(Math.random() * arrlang);
@@ -38,11 +47,10 @@ const Galerie = {
       arr[idx] = arr[r];
       arr[r] = tmp;
     }
-    // console.log("Random: ", arr);
     return arr;
-  },
+  }
 
-  // Konvertiert Randomarray in ein Array entsprechend der Deckkonfiguration
+  // Konvertiert eindimensionales Randomarray in ein Array entsprechend der Deckgeometrie
   frontSides() {
     const randomPicList = this.randomArray();
     const picArrayFront = Array(this.rows)
@@ -56,25 +64,25 @@ const Galerie = {
         idx++;
       }
     }
-    //  console.log("picArrayFront: ", picArrayFront);
     return picArrayFront;
-  },
+  }
 
+  // Rückseitenmotiv
   backSides() {
     const picArray = Array(this.rows)
       .fill(null)
       .map(() =>
         Array(this.cols).fill(this.picFolder + "backside" + this.picType)
       );
-    //  console.log("PPP", picArray);
     return picArray;
-  },
-};
+  }
+}
 
-///////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////  Bildcontainer /////////////////////////////////////////////////
 
 // Tabelle bauen und auf Seite poppen
-function showTable() {
+function table() {
+  const Galerie = new CardSet();
   const frontSides = Galerie.frontSides();
   const backSides = Galerie.backSides();
   const tableBody = document.querySelector("#imageTable tbody");
@@ -85,7 +93,6 @@ function showTable() {
     for (let col = 0; col < COLS; col++) {
       const frontSide = frontSides[row][col];
       const backSide = backSides[row][col];
-
       html += `
       <td>
         <div class="card" data-front="${frontSide}" data-state="back">
@@ -104,23 +111,26 @@ function showTable() {
     html += "</tr>";
   }
   tableBody.innerHTML = html;
-  // console.log(tableBody.innerHTML);
 }
-showTable();
 
-////////////////////////////////////////////////////////////////////////////////////////////
+table();
+
+///////////////////////////////////////////////////////  Gameplay   /////////////////////////////////////
+
+// Spiellogik
+let openCards = []; // Anzahl bislang aufgedeckter Karten
+let matchedCount = 0; // Anzahl gefundener Paare
 
 function wonORlost() {
-  let won;
-  if (won === true) {
-    console.log("WINNER!");
+  // Prüfung ob alle Karten gefunden
+  if (matchedCount === ROWS * COLS) {
+    console.log("WINNER! 🎉"); // Yes baby!!!
   } else {
-    console.log("LOSER!");
+    console.log("Nächster Player");
   }
-  console.log("Nächster Player");
 }
 
-// Eventhandler für die Maus
+///////////////////////////// Eventhandler für die Maus //////////////////////////////////////////
 document.querySelectorAll(".card").forEach((card) => {
   card.addEventListener(
     "mouseenter",
@@ -135,12 +145,38 @@ document.querySelectorAll(".card").forEach((card) => {
     const inner = card.querySelector(".card-inner");
     const state = card.dataset.state;
 
-    if (state === "back") {
-      inner.classList.add("flipped");
-      card.dataset.state = "front";
-    } else {
-      inner.classList.remove("flipped");
-      card.dataset.state = "back";
+    // Falls Karte schon offen oder gerade zwei offen sind → nichts tun
+    if (state === "front" || openCards.length === 2) return;
+
+    // Karte umdrehen
+    inner.classList.add("flipped");
+    card.dataset.state = "front";
+    openCards.push(card);
+
+    // Sobald zwei Karten offen sind → prüfen
+    if (openCards.length === 2) {
+      const [card1, card2] = openCards;
+      const front1 = card1.dataset.front;
+      const front2 = card2.dataset.front;
+
+      // Gleiche Bilder?
+      if (front1 === front2) {
+        console.log("Treffer!");
+        matchedCount += 2;
+        openCards = [];
+        wonORlost(); // prüfen, ob gewonnen
+      } else {
+        console.log("Falsch!");
+        // Nach 1 Sekunde wieder umdrehen
+        setTimeout(() => {
+          openCards.forEach((c) => {
+            c.querySelector(".card-inner").classList.remove("flipped");
+            c.dataset.state = "back";
+          });
+          openCards = [];
+          console.log("Nächster Versuch...");
+        }, 1000); // Timeout 1000ms. Keine Ahnung, warum der Schönschreiber das immer so doof platziert
+      }
     }
   });
 });
