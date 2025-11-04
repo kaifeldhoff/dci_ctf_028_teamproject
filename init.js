@@ -161,54 +161,54 @@ function wonORlost() {
 }
 
 ///////////////////////////// Eventhandler für die Maus //////////////////////////////////////////
-document.querySelectorAll(".card").forEach((card) => {
-  card.addEventListener(
-    "mouseenter",
-    () => (card.style.transform = "scale(1.1)")
-  );
-  card.addEventListener(
-    "mouseleave",
-    () => (card.style.transform = "scale(1)")
-  );
+// document.querySelectorAll(".card").forEach((card) => {
+//   card.addEventListener(
+//     "mouseenter",
+//     () => (card.style.transform = "scale(1.1)")
+//   );
+//   card.addEventListener(
+//     "mouseleave",
+//     () => (card.style.transform = "scale(1)")
+//   );
 
-  card.addEventListener("click", () => {
-    const inner = card.querySelector(".card-inner");
-    const state = card.dataset.state;
+//   card.addEventListener("click", () => {
+//     const inner = card.querySelector(".card-inner");
+//     const state = card.dataset.state;
 
-    // Falls Karte schon offen oder gerade zwei offen sind → nichts tun
-    if (state === "front" || openCards.length === 2) return;
+//     // Falls Karte schon offen oder gerade zwei offen sind → nichts tun
+//     if (state === "front" || openCards.length === 2) return;
 
-    // Karte umdrehen
-    inner.classList.add("flipped");
-    card.dataset.state = "front";
-    openCards.push(card);
+//     // Karte umdrehen
+//     inner.classList.add("flipped");
+//     card.dataset.state = "front";
+//     openCards.push(card);
 
-    // Sobald zwei Karten offen sind → prüfen
-    if (openCards.length === 2) {
-      const [card1, card2] = openCards;
-      const front1 = card1.dataset.front;
-      const front2 = card2.dataset.front;
+//     // Sobald zwei Karten offen sind → prüfen
+//     if (openCards.length === 2) {
+//       const [card1, card2] = openCards;
+//       const front1 = card1.dataset.front;
+//       const front2 = card2.dataset.front;
 
-      // Gleiche Bilder?
-      if (front1 === front2) {
-        console.log("Treffer!");
-        matchedCount += 2;
-        openCards = [];
-        wonORlost(); // prüfen, ob gewonnen
-      } else {
-        console.log("Falsch!");
-        // Nach 1 Sekunde wieder umdrehen
-        setTimeout(() => {
-          openCards.forEach((c) => {
-            c.querySelector(".card-inner").classList.remove("flipped");
-            c.dataset.state = "back";
-          });
-          openCards = [];
-          console.log("Nächster Versuch...");
-        }, 1000); // Timeout 1000ms. Keine Ahnung, warum der Schönschreiber das immer so doof platziert
-      }
-    }
-  });
-});
+//       // Gleiche Bilder?
+//       if (front1 === front2) {
+//         console.log("Treffer!");
+//         matchedCount += 2;
+//         openCards = [];
+//         wonORlost(); // prüfen, ob gewonnen
+//       } else {
+//         console.log("Falsch!");
+//         // Nach 1 Sekunde wieder umdrehen
+//         setTimeout(() => {
+//           openCards.forEach((c) => {
+//             c.querySelector(".card-inner").classList.remove("flipped");
+//             c.dataset.state = "back";
+//           });
+//           openCards = [];
+//           console.log("Nächster Versuch...");
+//         }, 1000); // Timeout 1000ms. Keine Ahnung, warum der Schönschreiber das immer so doof platziert
+//       }
+//     }
+//   });
+// });
 
 //////////////////////////////////////////////

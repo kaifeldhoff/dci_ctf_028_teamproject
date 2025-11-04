@@ -85,7 +85,7 @@ function spieleMemory() {
           // Gewinn prüfen
           const paareGefunden = document.querySelectorAll(".karte.paar").length;
           if (paareGefunden === alleKarten.length) {
-            console.log("WINNER! 🎉");
+            alert("WINNER! 🎉");
           }
         }, 1000); // 1 Sekunde warten, damit der Spieler die zweite Karte sehen kann
       }
