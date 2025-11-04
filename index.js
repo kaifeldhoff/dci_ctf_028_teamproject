@@ -106,3 +106,107 @@ Spielfeld = new CardSet();
 
 const vorne = Spielfeld.frontSides();
 console.log("Vorne: ", vorne);
+
+//////////////////////////////////////////////  Bildcontainer /////////////////////////////////////////////////
+
+// Tabelle bauen und auf Seite poppen
+function table() {
+  const Galerie = new CardSet();
+  const frontSides = Galerie.frontSides();
+  const backSide = Galerie.backSidePic;
+  const tableBody = document.querySelector("#imageTable");
+  let html = "";
+  let idx = 0;
+  for (let row = 0; row < ROWS; row++) {
+    html += "<tr>";
+    for (let col = 0; col < COLS; col++) {
+      const frontSide = frontSides[row][col];
+      html += `
+      <td>
+        <div class="card" data-front="${frontSide}" data-state="back">
+          <div class="card-inner">
+            <div class="card-front">
+              <img src="${backSide}" alt="backside">
+            </div>
+            <div class="card-back">
+              <img src="${frontSide}" alt="pic${idx}">
+            </div>
+          </div>
+        </div>
+      </td>`;
+      idx++;
+    }
+    html += "</tr>";
+  }
+  tableBody.innerHTML = html;
+}
+
+table();
+
+///////////////////////////////////////////////////////  Gameplay   /////////////////////////////////////
+
+// Spiellogik
+let openCards = []; // Anzahl bislang aufgedeckter Karten
+let matchedCount = 0; // Anzahl gefundener Paare
+
+function wonORlost() {
+  // Prüfung ob alle Karten gefunden
+  if (matchedCount === ROWS * COLS) {
+    console.log("WINNER! 🎉"); // Yes baby!!!
+  } else {
+    console.log("Nächster Player");
+  }
+}
+
+///////////////////////////// Eventhandler für die Maus //////////////////////////////////////////
+document.querySelectorAll(".card").forEach((card) => {
+  card.addEventListener(
+    "mouseenter",
+    () => (card.style.transform = "scale(1.1)")
+  );
+  card.addEventListener(
+    "mouseleave",
+    () => (card.style.transform = "scale(1)")
+  );
+
+  card.addEventListener("click", () => {
+    const inner = card.querySelector(".card-inner");
+    const state = card.dataset.state;
+
+    // Falls Karte schon offen oder gerade zwei offen sind → nichts tun
+    if (state === "front" || openCards.length === 2) return;
+
+    // Karte umdrehen
+    inner.classList.add("flipped");
+    card.dataset.state = "front";
+    openCards.push(card);
+
+    // Sobald zwei Karten offen sind → prüfen
+    if (openCards.length === 2) {
+      const [card1, card2] = openCards;
+      const front1 = card1.dataset.front;
+      const front2 = card2.dataset.front;
+
+      // Gleiche Bilder?
+      if (front1 === front2) {
+        console.log("Treffer!");
+        matchedCount += 2;
+        openCards = [];
+        wonORlost(); // prüfen, ob gewonnen
+      } else {
+        console.log("Falsch!");
+        // Nach 1 Sekunde wieder umdrehen
+        setTimeout(() => {
+          openCards.forEach((c) => {
+            c.querySelector(".card-inner").classList.remove("flipped");
+            c.dataset.state = "back";
+          });
+          openCards = [];
+          console.log("Nächster Versuch...");
+        }, 1000); // Timeout 1000ms. Keine Ahnung, warum der Schönschreiber das immer so doof platziert
+      }
+    }
+  });
+});
+
+//////////////////////////////////////////////
