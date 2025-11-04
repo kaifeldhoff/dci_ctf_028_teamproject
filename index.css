@@ -1,0 +1,128 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+body {
+  header {
+    background-color: #5c4d8b59;
+    padding: 2rem;
+    text-align: center;
+    position: relative;
+    outline: 1px solid red;
+    h1 {
+      color: #362d52;
+      font-family: arial;
+      font-size: large;
+    }
+    p {
+      outline: 1px solid red;
+      text-align: center;
+      max-width: 30rem;
+      margin: 0 auto;
+    }
+  }
+
+  main {
+    .spielfeld {
+      background-color: #b6dcd9;
+      outline: 1px solid red;
+      display: flex;
+      flex-wrap: wrap;
+
+      .hinweise {
+        background-color: #8893b3;
+        outline: 1px solid red;
+        flex: 1;
+        text-align: center;
+        
+      }
+
+      .regeln {
+        background-color: #8893b3;
+        outline: 1px solid red;
+        flex: 1;
+        text-align: center;
+        
+      }
+
+      .bilder {
+        justify-content: center;
+        margin: 1rem;
+        display: grid;
+        grid-template-columns: repeat(4, 8rem);
+        gap: 1rem;
+        /* max-width: 40rem; */
+
+        .verdeckt {
+          /* opacity: 0; */
+          /* visibility: hidden; */
+          transition: opacity 0.5s ease;
+        }
+        .paar {
+          opacity: 75%;
+          pointer-events: none;
+        }
+        .karte {
+          width: 6.25rem;
+          height: 8rem;
+          position: relative;
+          perspective: 800px;
+          cursor: pointer;
+          outline: 1px solid red;
+          margin: 1rem;
+        }
+
+        .karte::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background-image: url("images/himmel_90x90.jpg");
+          background-size: cover;
+          background-position: center;
+          border-radius: 8px;
+          transition: transform 0.5s;
+          transform-style: preserve-3d;
+        }
+
+        .karte img {
+          width: 100%;
+          height: 100%;
+          border-radius: 8px;
+          position: absolute;
+          inset: 0;
+          backface-visibility: hidden;
+          transform: rotateY(180deg);
+          transition: transform 0.5s;
+        }
+
+        .karte img:not(.verdeckt) {
+          transform: rotateY(0deg);
+        }
+
+        .karte img.verdeckt {
+          transform: rotateY(180deg);
+        }
+      }
+    }
+  }
+
+  footer {
+    background-color: #5c4d8b73;
+    text-align: center;
+    font-family: Arial;
+    width: 100%;
+    margin 0 auto;
+    padding: 20rem;
+    p {
+      background-color: #8374bb85;
+      margin: 0 auto;
+      max-width: 100%;
+    }
+  }
+}
