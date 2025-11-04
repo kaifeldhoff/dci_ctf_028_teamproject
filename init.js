@@ -38,6 +38,8 @@ export class CardSet {
         arr.push(r);
       }
     }
+
+    //joooo
     // ...und mischt die Fundstücke
     const max = arrlang * 100;
     for (let i = 0; i <= max; i++) {
