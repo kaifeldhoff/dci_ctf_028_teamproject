@@ -25,7 +25,7 @@ function erstelleKarten() {
 }
 
 /////////////////////////////// 3. Spielfeld erstellen ////////////////////////
-function erstelleSpielfeld(newCardSet, cardIds) {
+function erstelleSpielfeld(karten) {
   karten.forEach((karte) => {
     // Bild-Element erstellen
     const bild = document.createElement("img");
@@ -37,16 +37,6 @@ function erstelleSpielfeld(newCardSet, cardIds) {
     const cardDiv = document.createElement("div");
     cardDiv.classList.add("karte");
     cardDiv.appendChild(bild);
-
-    // Hover-Effekt
-    cardDiv.addEventListener(
-      "mouseenter",
-      () => (cardDiv.style.transform = "scale(1.1)")
-    );
-    cardDiv.addEventListener(
-      "mouseleave",
-      () => (cardDiv.style.transform = "scale(1)")
-    );
 
     spielfeld.appendChild(cardDiv);
   });
@@ -104,7 +94,17 @@ function spieleMemory() {
 }
 
 /////////////////////////////// 5. Spiel starten //////////////////////////////
+// const karten = erstelleKarten();
 const newcardSet = new CardSet();
 const cardIds = newcardSet.randomArray();
-erstelleSpielfeld(newCardSet, cardIds);
+
+let karten = [];
+for (const cardId of cardIds) {
+  const img = newcardSet.picFolder + cardId + newcardSet.picType;
+  karten.push({
+    name: cardId,
+    img: img,
+  });
+}
+erstelleSpielfeld(karten);
 spieleMemory();
