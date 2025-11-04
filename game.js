@@ -6,7 +6,7 @@ const PICTYPE = ".jpg"; // Bildformat
 const ROWS = 4; // Zeilen im Spielfeld
 const COLS = 4; // Spalten im Spielfeld
 
-const spielfeld = document.querySelector(".spielfeld"); // Container im HTML
+const spielfeld = document.querySelector(".bilder"); // Container im HTML
 
 /////////////////////////////// 2. Kartengenerator ////////////////////////////
 function erstelleKarten() {
