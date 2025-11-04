@@ -10,7 +10,7 @@ const PIC_WITH = PIC_HEIGH; // ebenso
 
 ///////////////////////////////// Datenstruktur für Container /////////////////////////////
 
-class CardSet {
+export class CardSet {
   picFolder;
   picType;
   maxPics;
@@ -73,77 +73,77 @@ class CardSet {
 //////////////////////////////////////////////  Bildcontainer /////////////////////////////////////////////////
 
 // Tabelle bauen und auf Seite poppen
-function table() {
-  const Galerie = new CardSet();
-  const frontSides = Galerie.frontSides();
-  const backSide = Galerie.backSidePic;
-  const tableBody = document.querySelector("#imageTable tbody");
-  let html = "";
-  let idx = 0;
-  for (let row = 0; row < ROWS; row++) {
-    html += "<tr>";
-    for (let col = 0; col < COLS; col++) {
-      const frontSide = frontSides[row][col];
-      html += `
-      <td>
-        <div class="card" data-front="${frontSide}" data-state="back">
-          <div class="card-inner">
-            <div class="card-front">
-              <img src="${backSide}" alt="backside">
-            </div>
-            <div class="card-back">
-              <img src="${frontSide}" alt="pic${idx}">
-            </div>
-          </div>
-        </div>
-      </td>`;
-      idx++;
-    }
-    html += "</tr>";
-  }
-  tableBody.innerHTML = html;
-}
+// function table() {
+//   const Galerie = new CardSet();
+//   const frontSides = Galerie.frontSides();
+//   const backSide = Galerie.backSidePic;
+//   const tableBody = document.querySelector("#imageTable tbody");
+//   let html = "";
+//   let idx = 0;
+//   for (let row = 0; row < ROWS; row++) {
+//     html += "<tr>";
+//     for (let col = 0; col < COLS; col++) {
+//       const frontSide = frontSides[row][col];
+//       html += `
+//       <td>
+//         <div class="card" data-front="${frontSide}" data-state="back">
+//           <div class="card-inner">
+//             <div class="card-front">
+//               <img src="${backSide}" alt="backside">
+//             </div>
+//             <div class="card-back">
+//               <img src="${frontSide}" alt="pic${idx}">
+//             </div>
+//           </div>
+//         </div>
+//       </td>`;
+//       idx++;
+//     }
+//     html += "</tr>";
+//   }
+//   tableBody.innerHTML = html;
+// }
 
-Spielfeld = new CardSet();
+// Spielfeld = new CardSet();
 
-const vorne = Spielfeld.frontSides();
-console.log("Vorne: ", vorne);
+// const vorne = Spielfeld.frontSides();
+// console.log("Vorne: ", vorne);
 
 //////////////////////////////////////////////  Bildcontainer /////////////////////////////////////////////////
 
 // Tabelle bauen und auf Seite poppen
-function table() {
-  const Galerie = new CardSet();
-  const frontSides = Galerie.frontSides();
-  const backSide = Galerie.backSidePic;
-  const tableBody = document.querySelector("#imageTable");
-  let html = "";
-  let idx = 0;
-  for (let row = 0; row < ROWS; row++) {
-    html += "<tr>";
-    for (let col = 0; col < COLS; col++) {
-      const frontSide = frontSides[row][col];
-      html += `
-      <td>
-        <div class="card" data-front="${frontSide}" data-state="back">
-          <div class="card-inner">
-            <div class="card-front">
-              <img src="${backSide}" alt="backside">
-            </div>
-            <div class="card-back">
-              <img src="${frontSide}" alt="pic${idx}">
-            </div>
-          </div>
-        </div>
-      </td>`;
-      idx++;
-    }
-    html += "</tr>";
-  }
-  tableBody.innerHTML = html;
-}
+// function table() {
+//   const Galerie = new CardSet();
+//   const frontSides = Galerie.frontSides();
+//   const backSide = Galerie.backSidePic;
+//   const tableBody = document.querySelector("#imageTable");
+//   let html = "";
+//   let idx = 0;
+//   for (let row = 0; row < ROWS; row++) {
+//     html += "<tr>";
+//     for (let col = 0; col < COLS; col++) {
+//       const frontSide = frontSides[row][col];
+//       html += `
+//       <td>
+//         <div class="card" data-front="${frontSide}" data-state="back">
+//           <div class="card-inner">
+//             <div class="card-front">
+//               <img src="${backSide}" alt="backside">
+//             </div>
+//             <div class="card-back">
+//               <img src="${frontSide}" alt="pic${idx}">
+//             </div>
+//           </div>
+//         </div>
+//       </td>`;
+//       idx++;
+//     }
+//     html += "</tr>";
+//   }
+//   tableBody.innerHTML = html;
+// }
 
-table();
+// table();
 
 ///////////////////////////////////////////////////////  Gameplay   /////////////////////////////////////
 
