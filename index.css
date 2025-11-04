@@ -18,7 +18,7 @@ body {
     h1 {
       color: #362d52;
       font-family: arial;
-      font-size: large;
+      font-size: x-large;
     }
     p {
       outline: 1px solid red;
@@ -40,7 +40,6 @@ body {
         outline: 1px solid red;
         flex: 1;
         text-align: center;
-        
       }
 
       .regeln {
@@ -48,7 +47,6 @@ body {
         outline: 1px solid red;
         flex: 1;
         text-align: center;
-        
       }
 
       .bilder {
@@ -117,7 +115,7 @@ body {
     text-align: center;
     font-family: Arial;
     width: 100%;
-    margin 0 auto;
+    margin: 0 auto;
     padding: 20rem;
     p {
       background-color: #8374bb85;
