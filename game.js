@@ -1,3 +1,5 @@
+import { CardSet } from "./init.js";
+
 /////////////////////////////// 1. Einstellungen ///////////////////////////////
 const PICFOLDER = "./pub/"; // Ordner mit Bildern
 const PICTYPE = ".jpg"; // Bildformat
@@ -23,7 +25,7 @@ function erstelleKarten() {
 }
 
 /////////////////////////////// 3. Spielfeld erstellen ////////////////////////
-function erstelleSpielfeld(karten) {
+function erstelleSpielfeld(newCardSet, cardIds) {
   karten.forEach((karte) => {
     // Bild-Element erstellen
     const bild = document.createElement("img");
@@ -102,6 +104,7 @@ function spieleMemory() {
 }
 
 /////////////////////////////// 5. Spiel starten //////////////////////////////
-const karten = erstelleKarten();
-erstelleSpielfeld(karten);
+const newcardSet = new CardSet();
+const cardIds = newcardSet.randomArray();
+erstelleSpielfeld(newCardSet, cardIds);
 spieleMemory();
