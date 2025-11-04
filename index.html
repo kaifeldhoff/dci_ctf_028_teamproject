@@ -3,56 +3,14 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>4x4 Bildertabelle mit JS</title>
-    <style>
-      html,
-      body {
-        height: 100%;
-        margin: 0;
-        font-family: system-ui, Segoe UI, Roboto, Helvetica, Arial;
-      }
-      .container {
-        max-width: 960px;
-        margin: 24px auto;
-        padding: 12px;
-      }
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        table-layout: fixed;
-      }
-      td {
-        padding: 6px;
-        border: 1px solid #eee;
-        width: 25%;
-        vertical-align: middle;
-        text-align: center;
-        background: #fafafa;
-      }
-      img {
-        display: block;
-        max-width: 100%;
-        height: auto;
-        object-fit: cover;
-        border-radius: 6px;
-        transition: transform 0.3s ease;
-      }
-      img:hover {
-        transform: scale(1.1);
-      }
-      caption {
-        caption-side: top;
-        text-align: left;
-        font-weight: 600;
-        margin-bottom: 8px;
-      }
-    </style>
+    <title>Bildergalerie mit JS</title>
+    <link rel="stylesheet" href="index.css" />
   </head>
   <body>
     <div class="container">
       <table id="imageTable">
         <caption>
-          4 × 4 Bilder (pic0.jpg - pic15.jpg)
+          Galerie
         </caption>
         <tbody></tbody>
       </table>
