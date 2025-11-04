@@ -1,114 +1,101 @@
-//////////////////////////// Globale Variablen //////////////////////////////////
-const PICFOLDER = "./pub/";
-const PICTYPE = ".jpg";
-const MAXPICS = 41;
-const COLS = 4; // Spielfeld-Spalten
-const ROWS = 4; // Spielfeld-Zeilen
+/////////////////////////////// 1. Einstellungen ///////////////////////////////
+const PICFOLDER = "./pub/"; // Ordner mit Bildern
+const PICTYPE = ".jpg";      // Bildformat
+const ROWS = 4;              // Zeilen im Spielfeld
+const COLS = 4;              // Spalten im Spielfeld
 
-const spielfeld = document.querySelector(".spielfeld");
+const spielfeld = document.querySelector(".spielfeld"); // Container im HTML
 
-//////////////////////////// Datenstruktur //////////////////////////////////
-class CardSet {
-  constructor() {
-    this.picFolder = PICFOLDER;
-    this.picType = PICTYPE;
-    this.maxPics = MAXPICS;
-    this.cols = COLS;
-    this.rows = ROWS;
+/////////////////////////////// 2. Kartengenerator ////////////////////////////
+function erstelleKarten() {
+  const anzahlKarten = ROWS * COLS / 2; // Anzahl verschiedener Bilder
+  const karten = [];
+
+  for (let i = 0; i < anzahlKarten; i++) {
+    const bildPfad = `${PICFOLDER}pic${i}${PICTYPE}`;
+    // jedes Bild kommt zweimal ins Array für Paare
+    karten.push({ name: `pic${i}`, img: bildPfad });
+    karten.push({ name: `pic${i}`, img: bildPfad });
   }
 
-  randomArray() {
-    const arrLength = this.cols * this.rows;
-    const arr = [];
-    while (arr.length < arrLength) {
-      const r = Math.floor(Math.random() * this.maxPics);
-      if (!arr.includes(r)) {
-        arr.push(r);
-        arr.push(r); // Doppeltes Paar
+  // Karten mischen
+  return karten.sort(() => Math.random() - 0.5);
+}
+
+/////////////////////////////// 3. Spielfeld erstellen ////////////////////////
+function erstelleSpielfeld(karten) {
+  karten.forEach((karte) => {
+    // Bild-Element erstellen
+    const bild = document.createElement("img");
+    bild.src = karte.img;
+    bild.alt = karte.name;
+    bild.classList.add("verdeckt"); // Start: verdeckt
+
+    // Karten-Container
+    const cardDiv = document.createElement("div");
+    cardDiv.classList.add("karte");
+    cardDiv.appendChild(bild);
+
+    // Hover-Effekt
+    cardDiv.addEventListener("mouseenter", () => cardDiv.style.transform = "scale(1.1)");
+    cardDiv.addEventListener("mouseleave", () => cardDiv.style.transform = "scale(1)");
+
+    spielfeld.appendChild(cardDiv);
+  });
+}
+
+/////////////////////////////// 4. Spiel-Logik /////////////////////////////////
+function spieleMemory() {
+  let ersteKarte = null;
+  let zweiteKarte = null;
+  let block = false; // blockiert Klicks während Timeout
+
+  const alleKarten = document.querySelectorAll(".karte");
+
+  alleKarten.forEach((cardDiv) => {
+    cardDiv.addEventListener("click", () => {
+      if (block || cardDiv.classList.contains("paar")) return;
+
+      const bild = cardDiv.querySelector("img");
+      bild.classList.remove("verdeckt");
+
+      if (!ersteKarte) {
+        ersteKarte = cardDiv;
+      } else {
+        if (cardDiv === ersteKarte) return; // gleiche Karte, nichts tun
+        zweiteKarte = cardDiv;
+        block = true;
+
+        setTimeout(() => {
+          const bild1 = ersteKarte.querySelector("img");
+          const bild2 = zweiteKarte.querySelector("img");
+
+          // Prüfen, ob Bilder gleich sind
+          if (bild1.src === bild2.src) {
+            ersteKarte.classList.add("paar");
+            zweiteKarte.classList.add("paar");
+          } else {
+            bild1.classList.add("verdeckt");
+            bild2.classList.add("verdeckt");
+          }
+
+          // Reset
+          ersteKarte = null;
+          zweiteKarte = null;
+          block = false;
+
+          // Gewinn prüfen
+          const paareGefunden = document.querySelectorAll(".karte.paar").length;
+          if (paareGefunden === alleKarten.length) {
+            console.log("WINNER! 🎉");
+          }
+        }, 1000); // 1 Sekunde warten, damit der Spieler die zweite Karte sehen kann
       }
-    }
-    // Shuffle
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
-  }
-
-  generateCards() {
-    const randArr = this.randomArray();
-    return randArr.map((num) => ({
-      name: `pic${num}`,
-      img: `${this.picFolder}${num}${this.picType}`,
-    }));
-  }
-}
-
-///////////////////////// Spiel-Logik //////////////////////////////////
-const cardSet = new CardSet();
-const karten = cardSet.generateCards();
-
-let erstesBild = null;
-let zweitesBild = null;
-let ersteKarte = null;
-let zweiteKarte = null;
-let delay = false;
-
-// Karten ins Spielfeld einfügen
-for (const karte of karten) {
-  const bild = document.createElement("img");
-  bild.src = karte.img;
-  bild.alt = karte.name;
-  bild.classList.add("verdeckt");
-
-  const cardDiv = document.createElement("div");
-  cardDiv.classList.add("karte");
-  cardDiv.appendChild(bild);
-  spielfeld.appendChild(cardDiv);
-
-  // Mausover-Effekt
-  cardDiv.addEventListener("mouseenter", () => {
-    cardDiv.style.transform = "scale(1.1)";
-  });
-  cardDiv.addEventListener("mouseleave", () => {
-    cardDiv.style.transform = "scale(1)";
-  });
-
-  // Klick-Handler
-  cardDiv.addEventListener("click", () => {
-    if (delay || cardDiv.classList.contains("paar")) return;
-
-    bild.classList.remove("verdeckt");
-
-    if (!erstesBild) {
-      erstesBild = bild;
-      ersteKarte = cardDiv;
-    } else {
-      if (cardDiv === ersteKarte) return;
-      zweitesBild = bild;
-      zweiteKarte = cardDiv;
-      delay = true;
-
-      setTimeout(() => {
-        if (erstesBild.src === zweitesBild.src) {
-          ersteKarte.classList.add("paar");
-          zweiteKarte.classList.add("paar");
-        } else {
-          erstesBild.classList.add("verdeckt");
-          zweitesBild.classList.add("verdeckt");
-        }
-        erstesBild = null;
-        zweitesBild = null;
-        ersteKarte = null;
-        zweiteKarte = null;
-        delay = false;
-
-        // Gewinn prüfen
-        const allePaare = document.querySelectorAll(".karte.paar").length;
-        if (allePaare === karten.length) {
-          console.log("WINNER! 🎉");
-        }
-      }, 1000);
-    }
+    });
   });
 }
+
+/////////////////////////////// 5. Spiel starten //////////////////////////////
+const karten = erstelleKarten();
+erstelleSpielfeld(karten);
+spieleMemory();
